@@ -22,6 +22,7 @@ namespace HelperMethods.Models {
         public Address HomeAddress { get; set; }
         [Display(Name = "Approved")]
         public bool IsApproved { get; set; }
+        [UIHint("Enum")]
         public Role Role { get; set; }
     }
     public class Address {
