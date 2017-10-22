@@ -16,25 +16,25 @@ namespace HelperMethods.Controllers {
         public ActionResult Index() {
             return View();
         }
-        private IEnumerable<Person> GetData(string selectedRole) {
+        public ActionResult GetPeopleData(string selectedRole = "All") {
             IEnumerable<Person> data = personData;
             if (selectedRole != "All") {
                 Role selected = (Role)Enum.Parse(typeof(Role), selectedRole);
                 data = personData.Where(p => p.Role == selected);
             }
-            return data;
+            if (Request.IsAjaxRequest()) {
+                var formattedData = data.Select(p => new {
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    Role = Enum.GetName(typeof(Role), p.Role)
+                });
+                return Json(formattedData, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                return PartialView(data);
+            }
         }
-        public JsonResult GetPeopleDataJson(string selectedRole = "All") {
-            var data = GetData(selectedRole).Select(p => new {
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                Role = Enum.GetName(typeof(Role), p.Role)
-            });
-            return Json(data, JsonRequestBehavior.AllowGet);
-        }
-        public PartialViewResult GetPeopleData(string selectedRole = "All") {
-           return PartialView(GetData(selectedRole));
-        }
+        
         public ActionResult GetPeople(string selectedRole = "All") {
             return View((object)selectedRole);
         }
