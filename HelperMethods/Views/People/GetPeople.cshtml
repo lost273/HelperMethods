@@ -10,6 +10,20 @@
         Confirm = "Do you wish to request new data?"
     };
 } 
+<script type="text/javascript">
+    function OnBegin() {
+        alert("This is the OnBegin Callback");
+    }
+    function OnSuccess(data) {
+        alert("This is the OnSuccess Callback: " + data);
+    }
+    function OnFailure(request, error) {
+        alert("This is the OnFailure Callback:" + error);
+    }
+    function OnComplete(request, status) {
+        alert("This is the OnComplete Callback: " + status);
+    }
+</script>
 <h2> Get People </h2> 
 <div id="loading" class="load" style="display: none">
     <p>Loading Data...</p>
@@ -33,8 +47,14 @@
         <div class="ajaxLink">
             @Ajax.ActionLink(role, "GetPeople",
            new { selectedRole = role},
-           new AjaxOptions { UpdateTargetId = "tableBody",
-               Url = Url.Action("GetPeopleData", new { selectedRole = role})})
+           new AjaxOptions {
+               UpdateTargetId = "tableBody",
+               Url = Url.Action("GetPeopleData", new { selectedRole = role}),
+               OnBegin = "OnBegin",
+               OnFailure = "OnFailure",
+               OnSuccess = "OnSuccess",
+               OnComplete = "OnComplete"
+           })
         </div>
     }
 </div>
